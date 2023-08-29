@@ -1,0 +1,65 @@
+
+version: '3.9'
+
+services:
+  message-service:
+    container_name: message-service
+    build:
+      context: message-service
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    networks:
+      - chatus-network
+
+  message-router:
+    container_name: message-router
+    build:
+      context: message-router
+    ports:
+      - "8083:8083"
+      - "5006:5005"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    networks:
+      - chatus-network
+
+  chat-service:
+    container_name: chat-service
+    build:
+      context: chat-service
+    ports:
+      - "8082:8082"
+      - "5007:5005"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    networks:
+      - chatus-network
+
+  user-service:
+    container_name: user-service
+    build:
+      context: user-service
+    ports:
+      - "8084:8084"
+      - "5008:5005"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    networks:
+      - chatus-network
+
+  front:
+    container_name: front
+    build:
+      context: front
+    ports:
+      - "8085:8085"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    networks:
+      - chatus-network
+
+networks:
+  chatus-network:
