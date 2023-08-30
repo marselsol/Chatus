@@ -23,8 +23,8 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping("/v1/get-chat-id")
-    public ResponseEntity<String> getChatUUID(@RequestBody List<UUID> userIds) {
+    @PostMapping("/v1/get-chat-name")
+    public ResponseEntity<String> getChatName(@RequestBody List<UUID> userIds) {
         try {
             String chatId = chatService.getChatBetweenTwoUsers(userIds);
             return ResponseEntity.ok().body(chatId);

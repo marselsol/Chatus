@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,4 +26,3 @@ public class Message implements Serializable {
     private List<UUID> attach;
     private MessageStatus messageStatus;
 }
-

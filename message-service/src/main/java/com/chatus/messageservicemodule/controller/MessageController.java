@@ -37,10 +37,10 @@ public class MessageController {
     }
 
     @GetMapping("/v1/read-message")
-    public ResponseEntity<?> readMessageFromDate(@RequestParam String topicName,
+    public ResponseEntity<?> readMessageFromDate(@RequestParam String chatName,
                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         try {
-            List<Message> messages = messageService.readMessageFromDate(topicName, dateTime);
+            List<Message> messages = messageService.readMessageFromDate(chatName, dateTime);
             return ResponseEntity.ok().body(messages);
         } catch (Exception e) {
             log.error("Error reading messages from date: {}", e.getMessage(), e);

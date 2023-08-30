@@ -29,8 +29,11 @@ public class ChatController {
     }
 
     @PostMapping("/sendMessage")
-    public String sendMessage(Message newMessage, @RequestParam("fromUserId") UUID fromUserId) {
-        frontService.sendMessage(fromUserId, newMessage);
+    public String sendMessage(Message newMessage,
+                              @RequestParam("fromUserId") UUID fromUserId,
+                              @RequestParam("toUserId") UUID toUserId) {
+        frontService.sendMessage(fromUserId, toUserId, newMessage);
         return "redirect:/";
     }
+
 }

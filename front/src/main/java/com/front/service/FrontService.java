@@ -1,29 +1,38 @@
 package com.front.service;
 
+import com.front.dto.MessageDto;
 import com.front.entity.Message;
 import com.front.entity.User;
+import com.front.utils.mappers.MessageMapper;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FrontService {
 
-    private List<Message> messages = new ArrayList<>();
     private List<User> users = new ArrayList<>();
     private Map<UUID, String> userLoginMap = new HashMap<>();
 
-    public void sendMessage(UUID fromUserId, Message message) {
-        message.setId(UUID.randomUUID());
-        message.setCreated(new Date());
-        message.setFromUserId(fromUserId);
-        messages.add(message);
-    }
+    private final RestTemplate restTemplate;
 
-    public List<Message> getMessages() {
-        return messages;
+    private String chatName;
+
+    public FrontService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @PostConstruct
@@ -32,10 +41,64 @@ public class FrontService {
         User user2 = new User(UUID.fromString("b7810996-b21f-42d2-9077-cae116f7773b"), "user2", "user2email", "user2pass", "", LocalDateTime.now(), null);
         users.add(user1);
         users.add(user2);
+        Collections.sort(users, Comparator.comparing(User::getId));
         for (User user : users) {
             userLoginMap.put(user.getId(), user.getLogin());
         }
+        List<UUID> userIdList = users.stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
+        chatName = getChatName(userIdList);
+        log.info("chat_name: " + chatName);
     }
+
+    public void sendMessage(UUID fromUserId, UUID toUserId, Message message) {
+        message.setCreated(new Date());
+        message.setFromUserId(fromUserId);
+        message.setMessageToId(toUserId);
+        MessageDto messageDto = MessageMapper.INSTANCE.messageToMessageDto(message);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<MessageDto> requestEntity = new HttpEntity<>(messageDto, headers);
+        restTemplate.exchange("http://localhost:8888/message/api/messages/v1/send-message", HttpMethod.POST, requestEntity, String.class);
+    }
+
+    public List<Message> getMessages() {
+        LocalDateTime startOfTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+        String apiUrl = UriComponentsBuilder.fromHttpUrl("http://localhost:8888")
+                .pathSegment("message", "api", "messages", "v1", "read-message")
+                .queryParam("chatName", chatName)
+                .queryParam("dateTime", startOfTime.format(DateTimeFormatter.ISO_DATE_TIME))
+                .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<List<Message>> responseEntity = restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<>() {}
+        );
+        return responseEntity.getBody();
+    }
+
+    public String getChatName(List<UUID> listUsersId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<List<UUID>> requestEntity = new HttpEntity<>(listUsersId, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                "http://localhost:8888/chat/api/chat/v1/get-chat-name",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+        return responseEntity.getBody();
+    }
+
+
+
+
 
     public List<User> getUsers() {
         return users;

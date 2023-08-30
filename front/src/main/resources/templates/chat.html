@@ -77,6 +77,9 @@
             <select class="user-select" name="fromUserId">
                 <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}"></option>
             </select>
+            <select class="user-select" name="toUserId">
+                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}"></option>
+            </select>
             <input type="text" th:field="*{text}" class="message-input" placeholder="Type your message..." autofocus/>
             <button class="send-button" type="submit">Send</button>
         </div>
