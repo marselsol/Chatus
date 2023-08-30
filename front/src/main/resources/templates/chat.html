@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            background-color: #f2f2f2;
+        }
+        select, input[type="text"], button {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .input-container {
+            display: flex;
+            align-items: flex-start;
+        }
+        .user-select {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .message-input {
+            flex: 2;
+            margin-right: 10px;
+        }
+        .send-button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<h1>Chat Room</h1>
+<div class="chat-container">
+    <ul>
+        <li th:each="message : ${messages}">
+            <span th:text="${userLoginMap[message.fromUserId]}"></span>: <span th:text="${message.text}"></span>
+        </li>
+    </ul>
+    <form action="/sendMessage" th:object="${newMessage}" method="post">
+        <div class="input-container">
+            <select class="user-select" name="fromUserId">
+                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}"></option>
+            </select>
+            <input type="text" th:field="*{text}" class="message-input" placeholder="Type your message..." autofocus/>
+            <button class="send-button" type="submit">Send</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

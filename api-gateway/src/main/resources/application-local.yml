@@ -1,0 +1,50 @@
+server:
+  port: 8888
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8282/realms/chatus
+  main:
+    web-application-type: reactive
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: message-service-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/message/**
+          filters:
+            - RewritePath=/message/(?<path>.*), /$\{path}
+
+        - id: chat-service-route
+          uri: http://localhost:8082
+          predicates:
+            - Path=/chat/**
+          filters:
+            - RewritePath=/chat/(?<path>.*), /$\{path}
+
+        - id: user-service-route
+          uri: http://localhost:8084
+          predicates:
+            - Path=/user/**
+          filters:
+            - RewritePath=/user/(?<path>.*), /$\{path}
+
+        - id: front-service-route
+          uri: http://localhost:8085
+          predicates:
+            - Path=/front/**
+          filters:
+            - RewritePath=/front/(?<path>.*), /$\{path}
+
+        - id: message-router-service-route
+          uri: http://localhost:8083
+          predicates:
+            - Path=/message-router/**
+          filters:
+            - RewritePath=/message-router/(?<path>.*), /$\{path}

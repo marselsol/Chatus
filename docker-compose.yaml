@@ -60,6 +60,17 @@ services:
     networks:
       - chatus-network
 
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: api-gateway
+    ports:
+      - "8888:8888"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    networks:
+      - chatus-network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.1
     hostname: zookeeper
@@ -69,11 +80,15 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - ./volumes/zookeeper_data:/var/lib/zookeeper/data
+      - ./volumes/zookeeper_datalog:/var/lib/zookeeper/log
     networks:
       - chatus-network
 
   broker:
     image: confluentinc/cp-server:7.4.1
+    restart: on-failure
     hostname: broker
     container_name: broker
     depends_on:
@@ -100,6 +115,8 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    volumes:
+      - ./volumes/broker_data:/var/lib/kafka/data
     networks:
       - chatus-network
 
@@ -134,9 +151,32 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: chatus_db
     volumes:
-      - ./postgres_data:/var/lib/postrgesql/data/
+      - ./volumes/postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - chatus-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.2
+    container_name: keycloak
+    command:
+      - start --auto-build --db postgres --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
+    environment:
+      KC_DB_URL: jdbc:postgresql://pg_db:5432/chatus_db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_DB_SCHEMA: public
+      KC_FEATURES: preview
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - 8282:8080
+    volumes:
+      - type: bind
+        source: ./volumes/keycloak-data/realm-export/realm-export.json
+        target: /opt/keycloak/data/import/realm-export.json
+        read_only: true
     networks:
       - chatus-network
 
