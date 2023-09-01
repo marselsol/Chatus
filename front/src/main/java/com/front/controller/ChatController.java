@@ -21,10 +21,10 @@ public class ChatController {
 
     @GetMapping("/")
     public String chatPage(Model model) {
-        model.addAttribute("messages", frontService.getMessages());
-        model.addAttribute("newMessage", new Message());
-        model.addAttribute("users", frontService.getUsers());
-        model.addAttribute("userLoginMap", frontService.getUserLoginMap());
+//        model.addAttribute("messages", frontService.getMessages());
+//        model.addAttribute("newMessage", new Message());
+//        model.addAttribute("users", frontService.getUsers());
+//        model.addAttribute("userLoginMap", frontService.getUserLoginMap());
         return "chat";
     }
 
@@ -32,7 +32,7 @@ public class ChatController {
     public String sendMessage(Message newMessage,
                               @RequestParam("fromUserId") UUID fromUserId,
                               @RequestParam("toUserId") UUID toUserId) {
-        frontService.sendMessage(fromUserId, toUserId, newMessage);
+        frontService.createAndSendMessage(fromUserId, toUserId, newMessage);
         return "redirect:/";
     }
 

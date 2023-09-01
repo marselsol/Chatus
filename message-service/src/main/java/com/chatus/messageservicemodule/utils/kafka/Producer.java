@@ -17,10 +17,6 @@ public class Producer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-//    public void sendMessage(String message, Long created) {
-//        kafkaTemplate.send(TOPIC, null, created, null, message);
-//    }
-
     public void sendMessage(String message) {
         kafkaTemplate.send(TOPIC, message);
     }
