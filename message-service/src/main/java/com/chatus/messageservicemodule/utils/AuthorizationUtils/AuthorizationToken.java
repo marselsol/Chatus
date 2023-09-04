@@ -1,9 +1,9 @@
-package com.front.utils.AuthorizationUtils;
+package com.chatus.messageservicemodule.utils.AuthorizationUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.front.utils.SecondsToInstantDeserializer;
+import com.chatus.messageservicemodule.utils.SecondsToInstantDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

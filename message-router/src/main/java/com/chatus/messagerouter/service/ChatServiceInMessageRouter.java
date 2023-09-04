@@ -1,5 +1,6 @@
 package com.chatus.messagerouter.service;
 
+import com.chatus.messagerouter.utils.AuthorizationUtils.AuthorizationClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -15,15 +16,18 @@ public class ChatServiceInMessageRouter {
 
     private final RestTemplate restTemplate;
 
-    public ChatServiceInMessageRouter(RestTemplate restTemplate) {
+    public ChatServiceInMessageRouter(RestTemplate restTemplate, AuthorizationClient authorizationClient) {
         this.restTemplate = restTemplate;
+        this.authorizationClient = authorizationClient;
     }
 
+    private final AuthorizationClient authorizationClient;
     @Value("${chat-service.url}")
     private String chatServiceUrl;
 
     public String getChatId(List<UUID> userIds) {
         HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authorizationClient.getAccessToken());
         headers.setContentType(MediaType.APPLICATION_JSON);
         try {
             ResponseEntity<String> response = restTemplate.exchange(

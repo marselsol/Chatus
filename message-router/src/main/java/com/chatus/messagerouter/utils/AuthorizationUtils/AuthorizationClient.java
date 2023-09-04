@@ -1,4 +1,4 @@
-package com.front.utils.AuthorizationUtils;
+package com.chatus.messagerouter.utils.AuthorizationUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;

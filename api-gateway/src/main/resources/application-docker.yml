@@ -35,13 +35,6 @@ spring:
           filters:
             - RewritePath=/user/(?<path>.*), /$\{path}
 
-#        - id: front-service-route
-#          uri: http://front:8085
-#          predicates:
-#            - Path=/front/**
-#          filters:
-#            - RewritePath=/front/(?<path>.*), /$\{path}
-
         - id: message-router-service-route
           uri: http://message-router:8083
           predicates:

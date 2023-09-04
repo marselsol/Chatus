@@ -47,11 +47,11 @@ public class MessageService {
         }
     }
 
-    public List<Message> readMessageFromDate(String topicName, LocalDateTime dateTime) {
+    public List<Message> readMessageFromDate(String chatName, LocalDateTime dateTime) {
         try {
-            return consumerService.getMessagesFromTopicFromDate(topicName, dateTime);
+            return consumerService.getMessagesFromTopicFromDate(chatName, dateTime);
         } catch (Exception e) {
-            log.error("An error occurred while reading messages from topic {}: {}", topicName, e.getMessage(), e);
+            log.error("An error occurred while reading messages from topic {}: {}", chatName, e.getMessage(), e);
             throw new RuntimeException("An error occurred while reading the message: {}", e);
         }
     }

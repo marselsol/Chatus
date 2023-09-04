@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 @Slf4j
@@ -20,17 +18,17 @@ public class ConsumerFactory {
     @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaBrokerUrl;
 
-    public KafkaConsumer createConsumer(String topicName) {
+    public KafkaConsumer createConsumer(String chatName) {
         Properties props = new Properties();
         props.put("bootstrap.servers", kafkaBrokerUrl);
-        props.put("group.id", topicName);
+        props.put("group.id", chatName);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        TopicPartition specificPartition = new TopicPartition(topicName, 0);
+        TopicPartition specificPartition = new TopicPartition(chatName, 0);
         try {
             consumer.assign(Collections.singletonList(specificPartition));
-//        consumer.subscribe(Collections.singletonList(topicName));
+//        consumer.subscribe(Collections.singletonList(chatName));
         } catch (Exception e) {
             log.error("Error assigning partition to consumer: {}", e.getMessage(), e);
         }

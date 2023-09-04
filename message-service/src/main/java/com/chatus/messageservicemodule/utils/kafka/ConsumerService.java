@@ -32,13 +32,13 @@ public class ConsumerService {
         this.objectMapper = objectMapper;
     }
 
-    public List<Message> getMessagesFromTopicFromDate(String topicName, LocalDateTime dateTime) {
+    public List<Message> getMessagesFromTopicFromDate(String chatName, LocalDateTime dateTime) {
         long targetTimestamp = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
         List<Message> messagesFromDate = new ArrayList<>();
-        KafkaConsumer<String, String> consumer = consumerFactory.createConsumer(topicName);
+        KafkaConsumer<String, String> consumer = consumerFactory.createConsumer(chatName);
         Map<TopicPartition, Long> timestamps = new HashMap<>();
-        TopicPartition topicPartition = new TopicPartition(topicName, 0);
-        timestamps.put(new TopicPartition(topicName, 0), targetTimestamp);
+        TopicPartition topicPartition = new TopicPartition(chatName, 0);
+        timestamps.put(new TopicPartition(chatName, 0), targetTimestamp);
         try {
             Map<TopicPartition, OffsetAndTimestamp> offsets = consumer.offsetsForTimes(timestamps);
             OffsetAndTimestamp offsetAndTimestamp = offsets.get(topicPartition);
@@ -61,8 +61,6 @@ public class ConsumerService {
             }
         } catch (Exception e) {
             log.error("An error occurred while reading messages by time: {}", e.getMessage(), e);
-        } finally {
-//            consumer.close();
         }
         return messagesFromDate;
     }
