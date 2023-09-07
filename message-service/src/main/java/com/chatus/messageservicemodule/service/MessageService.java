@@ -35,7 +35,6 @@ public class MessageService {
             message.setId(UUID.randomUUID());
             message.setCreated(new Date());
             String messageJson = objectMapper.writeValueAsString(message);
-            //producer.sendMessage(messageJson, messageDto.getCreated().getTime());
             producer.sendMessage(messageJson);
             return messageJson;
         } catch (JsonProcessingException e) {

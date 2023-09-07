@@ -10,13 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public User createUser(UserDto userDto) {
@@ -38,5 +43,16 @@ public class UserService {
                 LocalDateTime.now());
         userRepository.save(user);
         return user;
+    }
+
+    @Transactional
+    public String getUserEmailById(String uuid) {
+        System.out.println(UUID.fromString(uuid));
+        Optional<User> user = userRepository.findUserById(UUID.fromString(uuid));
+        if (user.isPresent()) {
+            return user.get().getEmail();
+        } else {
+            throw new NoSuchElementException("User not found with id: " + uuid);
+        }
     }
 }
