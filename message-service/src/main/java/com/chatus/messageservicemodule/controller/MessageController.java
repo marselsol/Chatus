@@ -20,7 +20,7 @@ import java.util.List;
 @Validated
 public class MessageController {
     private final MessageService messageService;
-//git
+
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
     }

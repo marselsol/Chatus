@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MailController {
-//git
+
     private final EmailService emailService;
 
     public MailController(EmailService emailService) {
