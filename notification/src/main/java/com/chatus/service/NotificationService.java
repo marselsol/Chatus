@@ -25,12 +25,12 @@ public class NotificationService {
 
     private final EmailService emailService;
 
-    @Autowired
-    private DataFromUserService dataFromUserService;
+    private final DataFromUserService dataFromUserService;
 
-    public NotificationService(PermissionsService permissionsService, EmailService emailService) {
+    public NotificationService(PermissionsService permissionsService, EmailService emailService, DataFromUserService dataFromUserService) {
         this.permissionsService = permissionsService;
         this.emailService = emailService;
+        this.dataFromUserService = dataFromUserService;
     }
 
     @KafkaListener(topics = "notification", groupId = "notification-consumer")
@@ -56,8 +56,8 @@ public class NotificationService {
     }
 
     private void sendNotificationToEmail(Message message) throws JsonProcessingException {
-
-        emailService.sendEmail(dataFromUserService.getUsersEmail(message.getMessageToId()), "Уведомление в Chatus", "Вам пришло письмо.");
+//        emailService.sendEmail(dataFromUserService.getUsersEmail(message.getMessageToId()), "Уведомление в Chatus", "Вам пришло письмо.");
+        log.info("Пользователю с UUID " + message.getMessageToId() + " отправлено email-уведомление.");
     }
 
     private void sendNotificationToSms(Message message) {

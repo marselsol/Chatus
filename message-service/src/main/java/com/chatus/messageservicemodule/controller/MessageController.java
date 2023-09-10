@@ -47,4 +47,12 @@ public class MessageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred while reading messages");
         }
     }
+
+    @GetMapping("/test/{text}")
+    public String test(@PathVariable String text) {
+        log.info("Test logger info");
+        log.error("Test logger error");
+        log.error(text);
+        return "test";
+    }
 }

@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PermissionsService {
 
-    private Map<UUID, UserNotificationPermissions> permissoinsMap = new HashMap<>();
+    private Map<UUID, UserNotificationPermissions> permissoinsMap = new ConcurrentHashMap<>();
 
     private final NotificationPermissionsRepository notificationPermissionsRepository;
 

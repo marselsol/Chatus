@@ -41,3 +41,10 @@ spring:
             - Path=/message-router/**
           filters:
             - RewritePath=/message-router/(?<path>.*), /$\{path}
+
+        - id: notification-route
+          uri: http://notification:8086
+          predicates:
+            - Path=/notification/**
+          filters:
+            - RewritePath=/notification/(?<path>.*), /$\{path}

@@ -1,182 +1,233 @@
 version: '3.9'
 
 services:
-  message-service:
-    container_name: message-service
-    build:
-      context: message-service
+#  message-service:
+#    container_name: message-service
+#    build:
+#      context: message-service
+#    ports:
+#      - "8080:8080"
+#      - "5005:5005"
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    networks:
+#      - chatus-network
+#
+#  message-router:
+#    container_name: message-router
+#    build:
+#      context: message-router
+#    ports:
+#      - "8083:8083"
+#      - "5006:5005"
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    networks:
+#      - chatus-network
+#
+#  chat-service:
+#    container_name: chat-service
+#    build:
+#      context: chat-service
+#    ports:
+#      - "8082:8082"
+#      - "5007:5005"
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    networks:
+#      - chatus-network
+#
+#  user-service:
+#    container_name: user-service
+#    build:
+#      context: user-service
+#    ports:
+#      - "8084:8084"
+#      - "5008:5005"
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    networks:
+#      - chatus-network
+#
+#  front:
+#    container_name: front
+#    build:
+#      context: front
+#    ports:
+#      - "8085:8085"
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    networks:
+#      - chatus-network
+#
+#  api-gateway:
+#    container_name: api-gateway
+#    build:
+#      context: api-gateway
+#    ports:
+#      - "8888:8888"
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    networks:
+#      - chatus-network
+
+#  zookeeper:
+#    image: confluentinc/cp-zookeeper:7.4.1
+#    hostname: zookeeper
+#    container_name: zookeeper
+#    ports:
+#      - "2181:2181"
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#      ZOOKEEPER_TICK_TIME: 2000
+#    volumes:
+#      - ./volumes/zookeeper_data:/var/lib/zookeeper/data
+#      - ./volumes/zookeeper_datalog:/var/lib/zookeeper/log
+#    networks:
+#      - chatus-network
+#
+#  control-center:
+#    image: confluentinc/cp-enterprise-control-center:7.4.1
+#    hostname: control-center
+#    container_name: control-center
+#    depends_on:
+#      - broker
+#    ports:
+#      - "9021:9021"
+#    environment:
+#      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+#      CONTROL_CENTER_CONNECT_CONNECT-DEFAULT_CLUSTER: 'connect:8083'
+#      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8088"
+#      CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
+#      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+#      CONTROL_CENTER_REPLICATION_FACTOR: 1
+#      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+#      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+#      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+#      PORT: 9021
+#    networks:
+#      - chatus-network
+#
+#
+#  db:
+#    container_name: pg_db
+#    image: postgres:15.3
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: chatus_db
+#    volumes:
+#      - ./volumes/postgres_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#    networks:
+#      - chatus-network
+#
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:20.0.2
+#    container_name: keycloak
+#    command:
+#      - start --auto-build --db postgres --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
+#    environment:
+#      KC_DB_URL: jdbc:postgresql://pg_db:5432/chatus_db
+#      KC_DB_USERNAME: postgres
+#      KC_DB_PASSWORD: postgres
+#      KC_DB_SCHEMA: public
+#      KC_FEATURES: preview
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#    ports:
+#      - 8282:8080
+#    volumes:
+#      - type: bind
+#        source: ./volumes/keycloak-data/realm-export/realm-export.json
+#        target: /opt/keycloak/data/import/realm-export.json
+#        read_only: true
+#    networks:
+#      - chatus-network
+#
+#  broker:
+#    image: confluentinc/cp-server:7.4.1
+#    restart: on-failure
+#    hostname: broker
+#    container_name: broker
+#    depends_on:
+#      - zookeeper
+#    ports:
+#      - "9092:9092"
+#      - "9101:9101"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+#      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+#      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+#      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+#      KAFKA_JMX_PORT: 9101
+#      KAFKA_JMX_HOSTNAME: localhost
+#      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+#      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+#      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+#      CONFLUENT_METRICS_ENABLE: 'true'
+#      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+#    volumes:
+#      - ./volumes/broker_data:/var/lib/kafka/data
+#    networks:
+#      - chatus-network
+
+  elasticsearch:
+    image: elasticsearch:8.9.1
+    container_name: elasticsearch
     ports:
-      - "8080:8080"
-      - "5005:5005"
+      - "9200:9200"
+      - "9300:9300"
     environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xmx512m -Xms512m"
+      - "ELASTIC_USERNAME=marsel"
+      - "ELASTIC_PASSWORD=password"
+      - "xpack.security.enabled=false"
+      - "xpack.security.http.ssl.enabled=false"
+#    volumes:
+#      - ./volumes/elasticsearch_data:/usr/share/elasticsearch/data
     networks:
       - chatus-network
 
-  message-router:
-    container_name: message-router
-    build:
-      context: message-router
+  logstash:
+    image: logstash:8.9.1
+    container_name: logstash
     ports:
-      - "8083:8083"
-      - "5006:5005"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
-    networks:
-      - chatus-network
-
-  chat-service:
-    container_name: chat-service
-    build:
-      context: chat-service
-    ports:
-      - "8082:8082"
-      - "5007:5005"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
-    networks:
-      - chatus-network
-
-  user-service:
-    container_name: user-service
-    build:
-      context: user-service
-    ports:
-      - "8084:8084"
-      - "5008:5005"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
-    networks:
-      - chatus-network
-
-  front:
-    container_name: front
-    build:
-      context: front
-    ports:
-      - "8085:8085"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
-    networks:
-      - chatus-network
-
-  api-gateway:
-    container_name: api-gateway
-    build:
-      context: api-gateway
-    ports:
-      - "8888:8888"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
-    networks:
-      - chatus-network
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.1
-    hostname: zookeeper
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      - "5044:5044"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
     volumes:
-      - ./volumes/zookeeper_data:/var/lib/zookeeper/data
-      - ./volumes/zookeeper_datalog:/var/lib/zookeeper/log
+      - ./config/logstash-config/pipeline:/usr/share/logstash/pipeline
+      - ./config/logstash-config/logstash.yml:/usr/share/logstash/config/logstash.yml
+
+    environment:
+      - "ELASTICSEARCH_HOST=elasticsearch"
+      - "ELASTICSEARCH_PORT=9200"
     networks:
       - chatus-network
 
-  broker:
-    image: confluentinc/cp-server:7.4.1
-    restart: on-failure
-    hostname: broker
-    container_name: broker
+  kibana:
+    image: kibana:8.9.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      ELASTICSEARCH_USERNAME: marsel
+      ELASTICSEARCH_PASSWORD: password
     depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-      - "9101:9101"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
-      CONFLUENT_METRICS_ENABLE: 'true'
-      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
-    volumes:
-      - ./volumes/broker_data:/var/lib/kafka/data
-    networks:
-      - chatus-network
-
-  control-center:
-    image: confluentinc/cp-enterprise-control-center:7.4.1
-    hostname: control-center
-    container_name: control-center
-    depends_on:
-      - broker
-    ports:
-      - "9021:9021"
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
-      CONTROL_CENTER_CONNECT_CONNECT-DEFAULT_CLUSTER: 'connect:8083'
-      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8088"
-      CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      PORT: 9021
-    networks:
-      - chatus-network
-
-
-  db:
-    container_name: pg_db
-    image: postgres:15.3
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: chatus_db
-    volumes:
-      - ./volumes/postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - chatus-network
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:20.0.2
-    container_name: keycloak
-    command:
-      - start --auto-build --db postgres --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
-    environment:
-      KC_DB_URL: jdbc:postgresql://pg_db:5432/chatus_db
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
-      KC_DB_SCHEMA: public
-      KC_FEATURES: preview
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - 8282:8080
-    volumes:
-      - type: bind
-        source: ./volumes/keycloak-data/realm-export/realm-export.json
-        target: /opt/keycloak/data/import/realm-export.json
-        read_only: true
+      - elasticsearch
     networks:
       - chatus-network
 
