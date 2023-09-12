@@ -26,7 +26,9 @@ public class ChatController {
     @PostMapping("/v1/get-chat-name")
     public ResponseEntity<String> getChatName(@RequestBody List<UUID> userIds) {
         try {
+            log.info("TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST");
             String chatId = chatService.getChatBetweenTwoUsers(userIds);
+            log.error("SECONDDDDDDDDDDDD TESTTTTTTTTTTTTTTTTTTTTT");
             return ResponseEntity.ok().body(chatId);
         } catch (Exception e) {
             log.error("Error getting chat name: {}", e.getMessage(), e);

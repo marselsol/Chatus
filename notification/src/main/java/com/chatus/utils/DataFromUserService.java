@@ -12,17 +12,20 @@ import java.util.UUID;
 @Service
 public class DataFromUserService {
 
-    @Autowired
-    private AuthorizationClient authorizationClient;
+    private final AuthorizationClient authorizationClient;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${base.url}")
     private String baseURL;
 
     @Value("${get.user.email.by.id.endpoint.v1}")
     private String getUserEmailByIdEndpointV1;
+
+    public DataFromUserService(AuthorizationClient authorizationClient, RestTemplate restTemplate) {
+        this.authorizationClient = authorizationClient;
+        this.restTemplate = restTemplate;
+    }
 
 
     public String getUsersEmail(UUID userId) {

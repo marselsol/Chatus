@@ -193,8 +193,7 @@ services:
       - "ELASTIC_PASSWORD=password"
       - "xpack.security.enabled=false"
       - "xpack.security.http.ssl.enabled=false"
-#    volumes:
-#      - ./volumes/elasticsearch_data:/usr/share/elasticsearch/data
+      - "bootstrap.memory_lock=true"
     networks:
       - chatus-network
 
@@ -209,10 +208,11 @@ services:
     volumes:
       - ./config/logstash-config/pipeline:/usr/share/logstash/pipeline
       - ./config/logstash-config/logstash.yml:/usr/share/logstash/config/logstash.yml
-
     environment:
       - "ELASTICSEARCH_HOST=elasticsearch"
       - "ELASTICSEARCH_PORT=9200"
+    depends_on:
+      - elasticsearch
     networks:
       - chatus-network
 
