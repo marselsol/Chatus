@@ -180,54 +180,75 @@ services:
 #    networks:
 #      - chatus-network
 
-  elasticsearch:
-    image: elasticsearch:8.9.1
-    container_name: elasticsearch
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      - "discovery.type=single-node"
-      - "ES_JAVA_OPTS=-Xmx512m -Xms512m"
-      - "ELASTIC_USERNAME=marsel"
-      - "ELASTIC_PASSWORD=password"
-      - "xpack.security.enabled=false"
-      - "xpack.security.http.ssl.enabled=false"
-      - "bootstrap.memory_lock=true"
-    networks:
-      - chatus-network
+#  elasticsearch:
+#    image: elasticsearch:8.9.1
+#    container_name: elasticsearch
+#    ports:
+#      - "9200:9200"
+#      - "9300:9300"
+#    environment:
+#      - "discovery.type=single-node"
+#      - "ES_JAVA_OPTS=-Xmx512m -Xms512m"
+#      - "ELASTIC_USERNAME=marsel"
+#      - "ELASTIC_PASSWORD=password"
+#      - "xpack.security.enabled=false"
+#      - "xpack.security.http.ssl.enabled=false"
+#      - "bootstrap.memory_lock=true"
+#    networks:
+#      - chatus-network
+#
+#  logstash:
+#    image: logstash:8.9.1
+#    container_name: logstash
+#    ports:
+#      - "5044:5044"
+#      - "5000:5000/tcp"
+#      - "5000:5000/udp"
+#      - "9600:9600"
+#    volumes:
+#      - ./config/logstash-config/pipeline:/usr/share/logstash/pipeline
+#      - ./config/logstash-config/logstash.yml:/usr/share/logstash/config/logstash.yml
+#    environment:
+#      - "ELASTICSEARCH_HOST=elasticsearch"
+#      - "ELASTICSEARCH_PORT=9200"
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - chatus-network
+#
+#  kibana:
+#    image: kibana:8.9.1
+#    container_name: kibana
+#    ports:
+#      - "5601:5601"
+#    environment:
+#      ELASTICSEARCH_URL: http://elasticsearch:9200
+#      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+#      ELASTICSEARCH_USERNAME: marsel
+#      ELASTICSEARCH_PASSWORD: password
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - chatus-network
 
-  logstash:
-    image: logstash:8.9.1
-    container_name: logstash
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
     ports:
-      - "5044:5044"
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
+      - "9090:9090"
     volumes:
-      - ./config/logstash-config/pipeline:/usr/share/logstash/pipeline
-      - ./config/logstash-config/logstash.yml:/usr/share/logstash/config/logstash.yml
-    environment:
-      - "ELASTICSEARCH_HOST=elasticsearch"
-      - "ELASTICSEARCH_PORT=9200"
-    depends_on:
-      - elasticsearch
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - chatus-network
 
-  kibana:
-    image: kibana:8.9.1
-    container_name: kibana
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
     ports:
-      - "5601:5601"
+      - "3000:3000"
     environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
-      ELASTICSEARCH_USERNAME: marsel
-      ELASTICSEARCH_PASSWORD: password
-    depends_on:
-      - elasticsearch
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
       - chatus-network
 
