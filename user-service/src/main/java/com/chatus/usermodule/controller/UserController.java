@@ -4,6 +4,7 @@ import com.chatus.usermodule.dto.UserDto;
 import com.chatus.usermodule.entity.User;
 import com.chatus.usermodule.service.UserService;
 import jakarta.persistence.EntityExistsException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -21,7 +23,8 @@ public class UserController {
         try {
             User user = userService.createUser(userDto);
             return ResponseEntity.ok().body(user);
-        } catch (EntityExistsException e) {
+        } catch (Exception e) {
+            log.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -30,7 +33,8 @@ public class UserController {
     public ResponseEntity<?> getUserEmailById(@PathVariable String uuid) {
         try {
             return ResponseEntity.ok().body(userService.getUserEmailById(uuid));
-        } catch (EntityExistsException e) {
+        } catch (Exception e) {
+            log.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

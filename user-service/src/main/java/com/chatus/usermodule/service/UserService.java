@@ -4,12 +4,11 @@ import com.chatus.usermodule.dto.UserDto;
 import com.chatus.usermodule.entity.User;
 import com.chatus.usermodule.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,6 +45,7 @@ public class UserService {
     }
 
     @Transactional
+    @Cacheable("userCache")
     public String getUserEmailById(String uuid) {
         System.out.println(UUID.fromString(uuid));
         Optional<User> user = userRepository.findUserById(UUID.fromString(uuid));
